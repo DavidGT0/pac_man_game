@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pac-Man Game</title>
+  <link rel="stylesheet" href="pacman.css" />
+</head>
+<body>
+  <!-- Welcome Page -->
+  <div id="welcomePage" class="welcome-container">
+    <!-- Animated background with floating pixels -->
+    <div class="animated-background">
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+      <div class="floating-pixels"></div>
+    </div>
+    
+    <!-- Matrix rain effect -->
+    <div class="matrix-rain"></div>
+
+    <!-- Ghosts and Space Invader background -->
+    <div class="ghost-background">
+      <div class="ghost-runner ghost-1">👻</div>
+      <div class="ghost-runner ghost-2">👻</div>
+      <div class="ghost-runner ghost-3">👻</div>
+      <div class="space-invader">👾</div>
+    </div>
+
+    <!-- Welcome content - spread across the page -->
+    <div class="welcome-content">
+      <h1 class="welcome-title">PAC-MAN</h1>
+      
+      <div class="button-container">
+        <div class="button-content">
+          <span class="control-icon">🎮</span>
+          <div class="button-text">
+            <span class="start-text">START</span>
+            <span class="game-text">GAME</span>
+          </div>
+          <span class="control-icon">🎮</span>
+        </div>
+        
+
+      </div>
+      
+              <!-- Bottom section -->
+        <div class="bottom-section">
+          <div class="card-with-icon">
+            <span class="score-icon">🏆</span>
+            <div class="info-card high-score-card">
+              <span class="score-text">High Score: 0</span>
+            </div>
+          </div>
+          <div class="card-with-icon">
+            <div class="credits-display">
+              <span class="credits-text">Created by Snir</span>
+            </div>
+            <span class="credit-icon">👨‍💻</span>
+          </div>
+
+        </div>
+    </div>
+  </div>
+
+  <!-- Game Page -->
+  <div id="gamePage" class="game-container">
+    <!-- Level indicator -->
+    <div class="level-indicator" id="levelIndicator">LEVEL 1</div>
+    
+    <!-- Floating particles -->
+    <div class="floating-particles"></div>
+    
+    <!-- Center glow effect -->
+    <div class="center-glow"></div>
+    
+    <!-- Countdown overlay -->
+    <div class="countdown" id="countdown" style="display: none;">3</div>
+    
+    <!-- Game status display -->
+    <div class="game-status" id="gameStatus">
+      <div class="status-item">
+        <span class="status-label">Score:</span>
+        <span class="status-value" id="currentScore">0</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Lives:</span>
+        <span class="status-value" id="livesDisplay">3</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Respawn Queue:</span>
+        <span class="status-value" id="respawnQueue">0</span>
+      </div>
+    </div>
+    
+    <!-- Game canvas -->
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
+  <!-- Audio elements for sound effects -->
+  <audio id="chaseStartSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+  </audio>
+  <audio id="chaseEndSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+  </audio>
+  <audio id="dotEatSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+  </audio>
+  <audio id="powerDotSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+  </audio>
+  <audio id="gameStartSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+  </audio>
+
+  <!-- Load the main game JavaScript -->
+  <script src="pacman.js"></script>
+</body>
+</html>
