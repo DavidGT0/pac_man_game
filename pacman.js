@@ -2577,3 +2577,41 @@ async function getDirection() {
     console.error("ESP32 CONNECTION ERROR:", error);
   }
 }
+
+// פונקציה לעדכון כיוון
+function setDirection(dx, dy) {
+  pacman.nextDx = dx;
+  pacman.nextDy = dy;
+}
+
+// שליטה דרך כפתורי המובייל
+document.getElementById('upBtn').addEventListener('touchstart', (e) => { e.preventDefault(); setDirection(0, -1); });
+document.getElementById('downBtn').addEventListener('touchstart', (e) => { e.preventDefault(); setDirection(0, 1); });
+document.getElementById('leftBtn').addEventListener('touchstart', (e) => { e.preventDefault(); setDirection(-1, 0); });
+document.getElementById('rightBtn').addEventListener('touchstart', (e) => { e.preventDefault(); setDirection(1, 0); });
+
+// זיהוי החלקה (Swipe) על גבי הקנבס
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+}, {passive: false});
+
+canvas.addEventListener('touchend', (e) => {
+  let touchEndX = e.changedTouches[0].screenX;
+  let touchEndY = e.changedTouches[0].screenY;
+
+  let diffX = touchEndX - touchStartX;
+  let diffY = touchEndY - touchStartY;
+
+  // בדיקה האם ההחלקה הייתה אופקית או אנכית
+  if (Math.abs(diffX) > Math.abs(diffY)) {
+    if (diffX > 30) setDirection(1, 0); // ימינה
+    else if (diffX < -30) setDirection(-1, 0); // שמאלה
+  } else {
+    if (diffY > 30) setDirection(0, 1); // למטה
+    else if (diffY < -30) setDirection(0, -1); // למעלה
+  }
+}, {passive: false});
